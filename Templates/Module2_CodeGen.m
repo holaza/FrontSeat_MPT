@@ -127,6 +127,7 @@ empc.optimizer
 x0 = [3; 0]; Nsim = 20;
 
 % Perform closed-loop simulation with the MPT3 
+empc.N = 1;    % overwrite the prediction horizon of the trimmed function
 loop = ClosedLoop(empc, model);
 data = loop.simulate(x0, Nsim);
 

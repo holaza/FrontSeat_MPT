@@ -61,9 +61,9 @@ model.y.reference = 'free';
 model.u.with('reference'); % overwrites u'*R*u -> (u - uref)'*R*(u - uref) 
 model.u.reference = 'free'; 
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % !!! Before updating this part try firstly to run this section and analyse
-% the issue. !!!
+% the issue. (expect an error)!!!
 % % Define soft constraints on states 
 % ...       % upper soft constraints on states
 % ...       % lower soft constraints on states 
@@ -82,14 +82,31 @@ Uref = B\(eye(2)-A)*(C\Yref);
 % Perform simulation
 x0 = [4; 2];
 Y = []; U = []; X = x0;
+model.initialize(x0);    % initialize the model from x0
 for i = 1:Nsim
-   u = mpc.evaluate(x0, 'y.reference', Yref(:,i), 'u.reference', Uref(:,i));
-   if isnan(u), error('Ups, the MPC problem is infeasible!'); end
-   [x0, y] = model.update(x0,u);
-   if i == Nsim - 20, x0 = x0 + [0; -1]; end  % sensor failure
-   X = [X, x0];
-   U = [U; u];
-   Y = [Y; y];
+    u = mpc.evaluate(x0, 'y.reference', Yref(:,i), 'u.reference', Uref(:,i));
+    if isnan(u)
+        subplot(3, 1, 1)
+        plot(0:i-1, X, LineWidth=2); xlabel('Ts'); ylabel('x');
+        hold on
+        plot([0 i-1], [model.x.min(2), model.x.min(2)]', '--k', LineWidth=2);
+        legend('x1','x2','x1_{mincon}')
+        subplot(3, 1, 2)
+        plot(0:i-2, Y, LineWidth=2); xlabel('Ts'); ylabel('y');
+        hold on
+        plot(0:Nsim-1, Yref, 'r--', LineWidth=2);
+        plot([0 i-1], [model.x.min(2), model.x.min(2)]', '--k', LineWidth=2);
+        legend('y','yref','ycon')
+        subplot(3, 1, 3)
+        stairs(0:i-2, U, LineWidth=2); xlabel('Ts'); ylabel('u');
+        error('Ups, the MPC problem is infeasible!');
+    end
+    % If an error occures => change it to: [x0, y] = model.update(x0,u);
+    [x0, y] = model.update(u);
+    if i == Nsim - 20, x0 = x0 + [0; -1]; end  % sensor failure
+    X = [X, x0];
+    U = [U; u];
+    Y = [Y; y];
 end
 
 % plot results
@@ -138,7 +155,7 @@ model.y.reference = 'free';
 model.u.with('reference');  % overwrites u'*Q*u -> (u - uref)'*Q*(u - uref) 
 model.u.reference = 'free'; 
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Min/max constraints on delta-u
 % model.u.with('deltaMin');                                                  
 % model.u.with('deltaMax');                                                  
@@ -213,7 +230,7 @@ model.y.reference = 'free';
 model.u.with('reference');  % overwrites u'*Q*u -> (u - uref)'*Q*(u - uref) 
 model.u.reference = 'free'; 
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Delta-u penalty             
 % H = ...;
 % model.u.with('deltaPenalty'); 
@@ -266,7 +283,7 @@ model.y.penalty = QuadFunction(100); % quadratic penalty y'*Qy*y
 model.y.with('reference'); % overwrites y'*Q*y -> (y - yref)'*Q*(y - yref) 
 model.y.reference = 'free';
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % Input reference tracking
 % model.u.with('reference'); % overwrites u'*Q*u -> (u - uref)'*Q*(u - uref) 
 % model.u.reference = 'free'; 
@@ -336,7 +353,7 @@ model.y.reference = 'free';
 model.u.with('deltaPenalty');                                              
 model.u.deltaPenalty = QuadFunction( 1 );                                   
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Setup:
 % N = ...;     % prediction horizon
 % Nc = ...;     % control horizon
@@ -348,6 +365,22 @@ model.u.deltaPenalty = QuadFunction( 1 );
 
 % Reconstruct the MPC
 mpc = MPCController(model, N);
+
+
+% Verify if the move blocking works.
+% Hint: Evaluate the mpc policy for a feasible initial condition and plot
+% open-loop control sequence. (A good choice of parameters is e.g.: 
+% N = 10, Nc = 5, x0 = [0;0], u0 = 3, yref = 1)
+% --------- Start Modifying Code Here -----------
+% x0 = ...;
+% u0 = ...;
+% yref = ...;
+% [u, feas, info] = mpc.evaluate(x0, 'y.reference', yref, 'u.previous', u0)
+% figure
+% title('Open-loop sequence of control actions')
+% stairs(info.U, LineWidth=2)
+% --------- End Modifying Code Here -----------
+
 
 % Create a vector of references for the entire simulation Nsim = 100
 Nsim = 100;
@@ -368,4 +401,3 @@ hold on
 plot(0:Nsim-1, Yref, 'r--', LineWidth=2);
 subplot(3, 1, 3)
 stairs(0:Nsim-1, data.U, LineWidth=2); xlabel('Ts'); ylabel('u');
-

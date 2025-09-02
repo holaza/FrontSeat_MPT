@@ -183,7 +183,7 @@ xlabel('Ts'); ylabel('u')
 
 %% Task 4b: 
 % Q1: Is the closed-loop stable? Repeat the task for a different initial 
-%     condition which is from the feasible domain (e.g. $[-1 \ 0]$
+%     condition which is from the feasible domain (e.g. [-1 0]')
 % --------- Start Modifying Code Here -----------
 % x0 = [...];
 % data_mpc = loop_mpc.simulate(x0, Nsim)

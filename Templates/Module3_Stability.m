@@ -38,7 +38,7 @@ empc = EMPCController(model, N);
 % MPC policy stabilizes the system. 
 
 %% Task 1: Terminal set
-% Add terminal set to the MPC setup in~\eqref{eq:MPC}.  
+% Add terminal set to the MPC setup.  
 % Hint: The terminal set can be computed in MPT via model.LQRSet)
 
 % Add terminal set to the MPC
@@ -47,12 +47,11 @@ model.x.terminalSet = model.LQRSet;
 
 
 %% Task 2: Terminal penalty
-
 % Add terminal penalty to the MPC setup.  
 % Hint: The terminal penalty is solution of the Ricatty equation, 
 % i.e. unconstrained MPC problem.
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % model.x.with('terminalPenalty');
 % P = ...;
 % model.x.terminalPenalty = P;
@@ -71,7 +70,7 @@ empc_stable.clicksim()
 %% Task 4: Stability certificate
 % Provide a certificate of stability (via constructing Lyapunov function).
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % loop = ClosedLoop(..., ...);
 % lyap = loop.toSystem.lyapunov('pwq');
 % --------- End Modifying Code Here -----------
@@ -90,22 +89,21 @@ empc_stable.clicksim()
 % To each of them try to:
 %   a) construct a PWQ Lyapunov function (answer to Q1).
 %   b) plot their feasible sets and compare their volumes (answer to Q2).
-%   c) compute explicit MPC with large prediciton horizon (e..g N = 100)
+%   c) compute explicit MPC with large prediciton horizon (e.g. N = 100)
 %      and visually compare its domain with previous MPCs (answer to Q3).
 
 %% Task 5a: 
 % Can we choose arbitrary prediction horizon and the MPC (with terminal
 % set/penalty) will always guarantee stability?
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % empc_stable1 = EMPCController(model, ...);
 % empc_stable2 = EMPCController(model, ...);
 % empc_stable3 = EMPCController(model, ...);
-% 
-% loop = ClosedLoop(empc_stable1, model); loop.toSystem.lyapunov('pwq');
-% loop = ClosedLoop(empc_stable2, model); loop.toSystem.lyapunov('pwq');
-% loop = ClosedLoop(empc_stable3, model); loop.toSystem.lyapunov('pwq');
 % --------- End Modifying Code Here -----------
+loop = ClosedLoop(empc_stable1, model); loop.toSystem.lyapunov('pwq');
+loop = ClosedLoop(empc_stable2, model); loop.toSystem.lyapunov('pwq');
+loop = ClosedLoop(empc_stable3, model); loop.toSystem.lyapunov('pwq');
 
 %% Task 5b:
 % Will volume of the MPC feasible domain increase/decrease with the
@@ -121,7 +119,7 @@ legend('MPC with N3','MPC with N2','MPC with N1');
 %% Task 5c:
 % Can we change volume of the feasibility domain by changing N to infinity?
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Let us construct MPC with a very long prediction horizon
 % empc_stable_longN = EMPCController(model, ...);
 % --------- End Modifying Code Here -----------
@@ -133,7 +131,7 @@ empc_stable_longN.partition.Domain.plot('color','k');
 empc_stable3.partition.Domain.plot('color','g');
 empc_stable2.partition.Domain.plot('color','b');
 empc_stable1.partition.Domain.plot('color','r');
-legend('MPC with N3','MPC with N2','MPC with N1','MPC with Nlong')
+legend('MPC with Nlong','MPC with N3','MPC with N2','MPC with N1')
 
 % Calculating volume of each domain.
 VlongN = empc_stable_longN.partition.Domain.volume;

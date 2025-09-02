@@ -38,7 +38,7 @@ model.x.penalty = QuadFunction(Q);      % quadratic penalty x'*Q*x
 % closed-loop simulation from x_0 = [4 2]' with 20 steps. Plot resulting 
 % trajectories. (Note: this is just a regulation problem.)
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Calculate the explicit MPC
 % empc = EMPCController(model, N);
 % % Perfroming regulation from x0 = [4 2]'
@@ -84,7 +84,7 @@ stairs(0:Nsim-1, data.U, LineWidth=2); xlabel('Ts'); ylabel('u');
 
 % Q1: Is the reference tracked without a steady-state offset? Explain why.
 % The steady state error (SSE) is calculated as:
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % SSE = ...
 % --------- End Modifying Code Here -----------
 % Hint: our objective function is 
@@ -106,7 +106,7 @@ empc.partition.Dim   % Dimensionalty
 % Verify the performance in a closed-loop simulation. Why is the 
 % steady-state offset rejected?
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Calculate the steady-state control input corresponding to xref
 % uref = ...
 % % Enable tracking of non-zero references
@@ -138,7 +138,7 @@ stairs(0:Nsim-1, data.U, LineWidth=2); xlabel('Ts'); ylabel('u');
 % Moreover, keep in mid that MPC has to be "motivated" to go to the
 % reference.
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % model = LTISystem('A', A, 'B', B, 'C', C, 'D', D); 
 % model.u.min = umin;
 % model.u.max = umax;
@@ -187,7 +187,7 @@ model.u.reference = 'free';
 % Calculate the explicit MPC
 empc = EMPCController(model, N);
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % % Create a vector of references for the entire simulation Nsim = 100
 % Nsim = 100;
 % yref1 = 2;
@@ -218,5 +218,5 @@ stairs(0:Nsim-1, data.U, LineWidth=2); xlabel('Ts'); ylabel('u');
 % Q2: Is dimensionality of the feasible set (of the explicit controller) 
 %     still the same as with the regulation problem (2D)? Why not?
 empc.partition.Dim  
-% Dimensionalty is still 4D as we have these parameters: [x1 x2 yref uref]
+% Dimensionalty is 4D as we have these parameters: [x1 x2 yref uref]
 

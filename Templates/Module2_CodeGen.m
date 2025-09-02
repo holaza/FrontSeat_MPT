@@ -181,7 +181,7 @@ stairs(0:Nsim-1, U, '--r', LineWidth=2); xlabel('Ts'); ylabel('u');
 
 % Exporting explicit MPC to pure MATLAB code
 % --------- Start Modifying Code Here -----------
-% file_name = empc_in_C_mex;    % do not need to include '.c'
+% file_name = 'empc_in_C';    % do not need to include '.c'
 % function_to_export = '...';
 % empc.optimizer.toC(function_to_export,file_name)
 % --------- End Modifying Code Here -----------
@@ -189,7 +189,7 @@ stairs(0:Nsim-1, U, '--r', LineWidth=2); xlabel('Ts'); ylabel('u');
 
 % The generated mex-file can be compiled via typing "mex scriptName_mex.c"
 % Hint: Firstly install MATLAB-build-in C/C++ compiler:  MinGW-w64
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % mex empc_in_C_mex.c   
 % % and evaluated inside Matlab
 % Uopt = empc_in_C_mex(x0)
@@ -211,7 +211,7 @@ empc.optimizer.toPython('empc_in_Python','primal','first-region')
 
 %% Task 7:Export of online MPC:
 % Export matrices of the optimisation problem via using function 
-% "mpc.getMatrices('dense')". Evaluate the MPC policy for an initial 
+% "mpc.getMatrices()". Evaluate the MPC policy for an initial 
 % condition x(t) = x_0 to obtain open-loop sequence of optimal control 
 % actions U(t) = [u_0 u_1 ... u_{N-1}]'. Then analyse if all 
 % constraints GU(t) <= W + Ex(t) are satisfied if such control action 
@@ -233,9 +233,9 @@ empc.optimizer.toPython('empc_in_Python','primal','first-region')
 
 % Create online MPC and obtian matrices of the optimisation problem
 mpc = MPCController(model, N);
-[Matrices, getback] = mpc.getMatrices('dense')
+[Matrices, getback] = mpc.getMatrices()
 
-% --------- End Modifying Code Here -----------
+% --------- Start Modifying Code Here -----------
 % x0 = [2;0];
 % [u, isfeasible, info] = mpc.evaluate(x0);  % solve mpc for x0
 % U = info.U;                                % retrive open-loop sequence U
